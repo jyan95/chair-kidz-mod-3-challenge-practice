@@ -9,7 +9,6 @@ module Api
 
       def chair
         kid = Kid.find(params[:kid_id])
-        kid.in_chair == true ? kid.update(votes: 0) : nil
         kid.in_chair = !kid.in_chair
         kid.save
         render json: kid
@@ -30,14 +29,19 @@ module Api
 
       def vote
         kid = Kid.find(params[:kid_id])
-        kid.votes += 1
-        kid.save
+          if params[:vote] == "up"
+            kid.votes += 1
+            kid.save
+          elsif params[:vote] == "down"
+            kid.votes -= 1
+            kid.save
+          end
         render json: kid
       end
 
       def destroy
         kid = Kid.find(params[:kid_id])
-        kid.destroy 
+        kid.destroy
       end
 
       def create
